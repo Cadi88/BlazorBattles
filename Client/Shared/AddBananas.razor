@@ -1,10 +1,10 @@
-﻿<button class="btn btn-info" @onclick="IncreaseBananaCount">+</button>
+﻿<button class="btn btn-info" @onclick="IncreaseBananasCount">+</button>
 
 @code {
     [Parameter]
     public EventCallback<int> BananasAdded { get; set; }
 
-    public void IncreaseBananaCount()
+    public void IncreaseBananasCount()
     {
         BananasAdded.InvokeAsync(10);
     }

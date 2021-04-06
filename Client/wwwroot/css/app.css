@@ -32,6 +32,12 @@ app {
     width: 100%;
 }
 
+.army-list {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 10px;
+}
+
 .main {
     flex: 1;
 }

@@ -29,7 +29,7 @@
         @if (BananaService.Bananas < selectedUnit.BananaCost)
         {
             needMoreBananas = true;
-            ToastService.ShowError("Not enough Bananas!!! :(");
+            ToastService.ShowError("Not enough Bananas!!!", ":(");
             return;
         }
         needMoreBananas = false;

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BlazorBattles.Shared
 {
-    public class Units
+    public class Unit
     {
         public int Id { get; set; }
         public string Title { get; set; }

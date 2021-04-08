@@ -4,26 +4,35 @@
 
 <h3>Army</h3>
 
-@foreach (var userUnit in UnitService.MyUnits)
+@if (UnitService.Units.Count > 0)
 {
-    <div class="army-list">
-        <div>
-            @switch (userUnit.UnitId)
-            {
-                case 1:<img src="Icons/W_Sword006.png" /> break;
-                case 2: <img src="Icons/S_Bow08.png" /> break;
-                case 3: <img src="Icons/C_Hat01.png" />break;
-            }
+    @foreach (var userUnit in UnitService.MyUnits)
+    {
+        <div class="army-list">
+            <div>
+                @switch (userUnit.UnitId)
+                {
+                    case 1:<img src="Icons/W_Sword006.png" /> break;
+                    case 2: <img src="Icons/S_Bow08.png" /> break;
+                    case 3: <img src="Icons/C_Hat01.png" />break;
+                }
+            </div>
+            <div>
+                @UnitService.Units.First(unit => unit.Id == userUnit.UnitId).Title
+            </div>
+            <div>
+                @userUnit.HitPoints HP
+            </div>
         </div>
-        <div>
-            @UnitService.Units.First(unit => unit.Id == userUnit.UnitId).Title
-        </div>
-        <div>
-            @userUnit.HitPoints HP
-        </div>
-    </div>
+    }
 }
-
+else
+            {
+<span>Loading units.......</span>
+            }
 @code {
-
+    protected override async Task OnInitializedAsync()
+    {
+        await UnitService.LoadUnitsAsync();
+    }
 }

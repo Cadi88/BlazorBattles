@@ -17,6 +17,13 @@
 
 <button class="btn btn-primary" @onclick="BuildUnit">Build</button>
 
+@if (needMoreBananas)
+{
+    <div>
+        Not enough bananas! :(
+    </div>
+}
+
 @code {
     int selectedUnitId = 1;
 
@@ -27,14 +34,21 @@
         BlazorBattles.Shared.Unit selectedUnit =
             UnitService.Units.FirstOrDefault(unit => unit.Id == selectedUnitId);
 
-        @if (BananaService.Bananas < selectedUnit.BananaCost)
+        if (BananaService.Bananas < selectedUnit.BananaCost)
         {
             needMoreBananas = true;
             ToastService.ShowError("Not enough Bananas!!!", ":(");
             return;
         }
+
         needMoreBananas = false;
+
         BananaService.EatBananas(selectedUnit.BananaCost);
         UnitService.AddUnit(selectedUnitId);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UnitService.LoadUnitsAsync();
     }
 }

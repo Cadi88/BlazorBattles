@@ -40,7 +40,7 @@ namespace BlazorBattles.Server.Controllers
             var result = new BattleResult();
             await Fight(attacker, opponent, result);
 
-            return Ok();
+            return Ok(result);
         }
 
         private async Task Fight(User attacker, User opponent, BattleResult result)
@@ -65,22 +65,16 @@ namespace BlazorBattles.Server.Controllers
                 currentRound++;
 
                 if (currentRound % 2 != 0)
-                  
-                {
                     attackerDamageSum += FightRound(attacker, opponent, attackerArmy, opponentArmy, result);
-                } else
-                {
-                    opponentDamageSum += FightRound(attacker, opponent, attackerArmy, opponentArmy, result);
-                }
+                else
+                    opponentDamageSum += FightRound(opponent, attacker, opponentArmy, attackerArmy, result);
             }
 
             result.IsVictory = opponentArmy.Count == 0;
             result.RoundsFought = currentRound;
 
             if (result.RoundsFought > 0)
-            {
                 await FinishFight(attacker, opponent, result, attackerDamageSum, opponentDamageSum);
-            }
         }
 
         private int FightRound(User attacker, User opponent, List<UserUnit> attackerArmy, List<UserUnit> opponentArmy, BattleResult result)
@@ -98,6 +92,7 @@ namespace BlazorBattles.Server.Controllers
             if (damage <=randomOpponent.HitPoints)
             {
                 randomOpponent.HitPoints -= damage;
+                result.Log.Add("result:");
                 result.Log.Add(
                     $"{attacker.Username}'s {randomAttacker.Unit.Title} attacks " + 
                     $"{opponent.Username}'s {randomOpponent.Unit.Title} with {damage} damage.");
@@ -109,6 +104,7 @@ namespace BlazorBattles.Server.Controllers
                 damage = randomOpponent.HitPoints;
                 randomOpponent.HitPoints = 0;
                 opponentArmy.Remove(randomOpponent);
+                result.Log.Add("result:");
                 result.Log.Add(
                     $"{attacker.Username}'s {randomAttacker.Unit.Title} kills " +
                     $"{opponent.Username}'s {randomOpponent.Unit.Title}!");

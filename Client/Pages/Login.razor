@@ -2,12 +2,13 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject BlazorBattles.Client.Services.IAuthService AuthService
 @inject IToastService ToastService
+
 Please log in below or <NavLink href="register">Register</NavLink> for a new account.
 
 <EditForm Model="@user" OnValidSubmit="HandleLogin">
     <DataAnnotationsValidator />
     <div class="form-group">
-        <label for="username">Username</label>
+        <label for="username">e-mail</label>
         <InputText id="username" @bind-Value="user.Email" class="form-control" />
     </div>
     <div class="form-group">

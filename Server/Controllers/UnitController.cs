@@ -1,6 +1,8 @@
-﻿using BlazorBattles.Shared;
+﻿using BlazorBattles.Server.Data;
+using BlazorBattles.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +14,18 @@ namespace BlazorBattles.Server.Controllers
     [ApiController]
     public class UnitController : ControllerBase
     {
-        public IList<Unit> Units { get; } = new List<Unit>
+        private readonly DataContext _context;
+
+        public UnitController(DataContext context)
         {
-            new Unit { Id=1, Title="Knight", HitPoints=100, Attack=10, Defense=10, BananaCost=100 },
-            new Unit { Id=2, Title="Archer", HitPoints=90, Attack=15, Defense=5, BananaCost=100 },
-            new Unit { Id=3, Title="Mage", HitPoints=60, Attack=20, Defense=2 , BananaCost=150 }
-        };
+            _context = context;
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetUnits()
         {
-            return Ok(Units);
+            var units = await _context.Units.ToListAsync();
+            return Ok(units);
         }
     }
 }

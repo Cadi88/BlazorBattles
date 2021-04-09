@@ -18,16 +18,16 @@ namespace BlazorBattles.Server.Controllers
         private readonly DataContext _context;
         private readonly IUtilityService _utilityService;
 
-        public UserUnitController(DataContext context, IUtilityService UtilityService)
+        public UserUnitController(DataContext context, IUtilityService utilityService)
         {
             _context = context;
-            _utilityService = UtilityService;
+            _utilityService = utilityService;
         }
 
         [HttpPost]
         public async Task<IActionResult> BuildUserUnits([FromBody] int unitId)
         {
-            var unit = await _context.Units.FirstOrDefaultAsync<Unit>(unit => unit.Id == unitId);
+            var unit = await _context.Units.FirstOrDefaultAsync<Unit>(u => u.Id == unitId);
             var user = await _utilityService.GetUser();
 
             if (user.Bananas < unit.BananaCost)
@@ -40,7 +40,7 @@ namespace BlazorBattles.Server.Controllers
             UserUnit newUserUnit = new UserUnit
             {
                 UnitId = unit.Id,
-                UserId = unit.Id,
+                UserId = user.Id,
                 HitPoints = unit.HitPoints
             };
 
@@ -48,6 +48,22 @@ namespace BlazorBattles.Server.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(newUserUnit);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserUnits()
+        {
+            var user = await _utilityService.GetUser();
+            var userUnits = await _context.UserUnits.Where(unit => unit.UserId == user.Id).ToListAsync();
+
+            var response = userUnits.Select(
+                unit => new UserUnitResponse
+                {
+                    UnitId = unit.UnitId,
+                    HitPoints = unit.HitPoints
+                });
+
+            return Ok(response);
         }
     }
 }
